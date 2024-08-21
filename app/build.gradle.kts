@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.sscomposeexpandablelistview"
+    namespace = "com.app.sscomposeexpandablelistview"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.sscomposeexpandablelistview"
+        applicationId = "com.app.sscomposeexpandablelistview"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

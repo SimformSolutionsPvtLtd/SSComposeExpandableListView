@@ -1,4 +1,4 @@
-package com.example.sscomposeexpandablelistview.ui.theme
+package com.app.sscomposeexpandablelistview.ui.theme
 
 import android.app.Activity
 import android.os.Build

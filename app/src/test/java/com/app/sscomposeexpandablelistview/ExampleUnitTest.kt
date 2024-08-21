@@ -1,4 +1,4 @@
-package com.example.sscomposeexpandablelistview
+package com.app.sscomposeexpandablelistview
 
 import org.junit.Test
 
