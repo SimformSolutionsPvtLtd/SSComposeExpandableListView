@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SSComposeExpandableListView</string>
+    <string name="txtAppTitle">SSComposeExpandableListView</string>
 </resources>

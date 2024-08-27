@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "SSComposeExpandableListView"
 include(":app")
- 
+include(":ExpandableListView")
