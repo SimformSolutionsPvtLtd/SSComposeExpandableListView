@@ -7,5 +7,6 @@ import com.simform.expandablelistview.ExpandableListData
 @Immutable
 @Stable
 data class MainUiState(
-    val expandableListData: List<ExpandableListData>
+    val simpleExpandableListData: List<ExpandableListData>,
+    val faqExpandableListData: List<ExpandableListData>,
 )
