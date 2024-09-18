@@ -1,7 +1,9 @@
 package com.simform.expandablelistview
 
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.text.AnnotatedString
 
 /**
  * Class for holding the input data for [ComposeExpandableListView]
@@ -11,7 +13,8 @@ import androidx.compose.runtime.Stable
 data class ExpandableListData(
     val headerText: String,
     val listItems: List<ListItemData>,
-    val isExpanded: Boolean = false
+    val isExpanded: Boolean = false,
+    @DrawableRes val headerCategoryIcon: Int? = null
 )
 
 /**
@@ -20,6 +23,7 @@ data class ExpandableListData(
 @Stable
 @Immutable
 data class ListItemData(
-    val name: String,
+    val name: String? = null,
+    val annotatedText: AnnotatedString? = null,
     val isSelected: Boolean = false
 )

@@ -8,18 +8,29 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
-class MainViewModel(private val expandableListData: List<ExpandableListData>) : ViewModel() {
+class MainViewModel(
+    private val simpleFruitsListData: List<ExpandableListData>,
+    private val faqListData: List<ExpandableListData>
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MainUiState(expandableListData = expandableListData))
+    private val _uiState = MutableStateFlow(
+        MainUiState(
+            simpleExpandableListData = simpleFruitsListData,
+            faqExpandableListData = faqListData
+        )
+    )
     val uiState = _uiState.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
-        initialValue = MainUiState(expandableListData = expandableListData)
+        initialValue = MainUiState(
+            simpleExpandableListData = simpleFruitsListData,
+            faqExpandableListData = faqListData
+        )
     )
 
     fun updateExpandStatus(index: Int, isExpanded: Boolean) {
         _uiState.update { state ->
-            state.copy(expandableListData = state.expandableListData.mapIndexed { indexOfData, expandableListData ->
+            state.copy(simpleExpandableListData = state.simpleExpandableListData.mapIndexed { indexOfData, expandableListData ->
                 if (indexOfData == index) expandableListData.copy(isExpanded = isExpanded) else expandableListData
             })
         }
@@ -27,16 +38,23 @@ class MainViewModel(private val expandableListData: List<ExpandableListData>) : 
 
     fun listItemSelected(headerIndex: Int, listItemIndex: Int, isSelected: Boolean) {
         val listItems =
-            _uiState.value.expandableListData[headerIndex].listItems.mapIndexed { index, listItemData ->
+            _uiState.value.simpleExpandableListData[headerIndex].listItems.mapIndexed { index, listItemData ->
                 if (index == listItemIndex) listItemData.copy(isSelected = isSelected) else listItemData
             }
         val expandableListData =
-            _uiState.value.expandableListData.mapIndexed { indexOfData: Int, expandableListData: ExpandableListData ->
+            _uiState.value.simpleExpandableListData.mapIndexed { indexOfData: Int, expandableListData: ExpandableListData ->
                 if (indexOfData == headerIndex) expandableListData.copy(listItems = listItems) else expandableListData
             }
-
         _uiState.update { state ->
-            state.copy(expandableListData = expandableListData)
+            state.copy(simpleExpandableListData = expandableListData)
+        }
+    }
+
+    fun updateFAQExpandedState(index: Int, isExpanded: Boolean) {
+        _uiState.update { state ->
+            state.copy(faqExpandableListData = state.faqExpandableListData.mapIndexed { indexOfData, expandableListData ->
+                if (indexOfData == index) expandableListData.copy(isExpanded = isExpanded) else expandableListData
+            })
         }
     }
 }
