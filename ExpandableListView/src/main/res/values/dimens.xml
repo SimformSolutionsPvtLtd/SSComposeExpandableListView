@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="list_item_title_padding">12.dp</dimen>
+    <dimen name="header_title_padding">8.dp</dimen>
+    <dimen name="icon_padding">12.dp</dimen>
+</resources>
