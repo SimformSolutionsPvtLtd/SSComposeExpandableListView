@@ -2,12 +2,6 @@ package com.simform.expandablelistview
 
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -18,27 +12,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.app.FrameMetricsAggregator.ANIMATION_DURATION
+import androidx.compose.ui.util.fastForEachIndexed
 
 /**
  * Displays an expandable list view with headers and child items.
  * Each header can be expanded to reveal items, and users can select them.
  *
  * @param modifier Modifier for the root container, allowing customization like padding or size.
- * @param data List of [ExpandableListData] representing the expandable list's headers and child items.
+ * @param expandableListData List of [ExpandableListData] representing the expandable list's headers and child items.
  * @param headerStylingAttributes Defines styling for headers, including appearance and layout.
  * @param listItemStylingAttributes Defines styling for list items, including appearance and layout.
  * @param expandedIcon Drawable resource ID for the icon when a header is expanded (default: up arrow).
@@ -49,7 +44,7 @@ import androidx.core.app.FrameMetricsAggregator.ANIMATION_DURATION
 @Composable
 fun ComposeExpandableListView(
     modifier: Modifier = Modifier,
-    data: List<ExpandableListData>,
+    expandableListData: List<ExpandableListData>,
     headerStylingAttributes: HeaderStylingAttributes = HeaderStylingAttributes(),
     listItemStylingAttributes: ListItemStylingAttributes = ListItemStylingAttributes(),
     @DrawableRes expandedIcon: Int = R.drawable.ic_arrow_drop_up,
@@ -59,8 +54,8 @@ fun ComposeExpandableListView(
 ) {
 
     LazyColumn(modifier = modifier) {
-        data.forEachIndexed { index, data ->
-            item {
+        expandableListData.fastForEachIndexed { index, data ->
+            item(key = data.headerText) {
                 HeaderView(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -79,24 +74,16 @@ fun ComposeExpandableListView(
                     isExpanded = data.isExpanded,
                     expandedIcon = expandedIcon,
                     collapseIcon = collapseIcon,
-                ) {
-                    onStateChanged(index, !data.isExpanded)
-                }
+                )
             }
 
-            itemsIndexed(data.listItems) { itemIndex, itemData ->
-                AnimatedVisibility(
-                    // Apply animation when list expands or collapse.
-                    visible = data.isExpanded,
-                    // Fade in + expand animation
-                    enter = fadeIn(animationSpec = tween(ANIMATION_DURATION)) + expandVertically(
-                        animationSpec = tween(ANIMATION_DURATION)
-                    ),
-                    //Fade out + shrink animation
-                    exit = fadeOut(animationSpec = tween(ANIMATION_DURATION)) + shrinkVertically(
-                        animationSpec = tween(ANIMATION_DURATION)
-                    )
-                ) {
+            if (data.isExpanded) {
+                itemsIndexed(
+                    items = data.listItems,
+                    key = { _, item ->
+                        "${data.headerText} - ${item.name}"
+                    }
+                ) { itemIndex, itemData ->
                     ListItemView(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -110,7 +97,8 @@ fun ComposeExpandableListView(
                             )
                             .clickable {
                                 onListItemClicked(index, itemIndex, !itemData.isSelected)
-                            },
+                            }
+                            .animateItem(),
                         text = itemData.name,
                         textStyle = if (itemData.isSelected) {
                             // Set text style based on selection state.
@@ -139,7 +127,6 @@ fun ComposeExpandableListView(
  * @param isExpanded Whether the header is currently expanded or collapsed.
  * @param expandedIcon Drawable resource ID for the icon when the header is expanded (default: up arrow).
  * @param collapseIcon Drawable resource ID for the icon when the header is collapsed (default: down arrow).
- * @param onStateChanged Callback for when the header's expand/collapse state changes, providing the new state.
  */
 @Composable
 fun HeaderView(
@@ -149,7 +136,6 @@ fun HeaderView(
     isExpanded: Boolean,
     @DrawableRes expandedIcon: Int = R.drawable.ic_arrow_drop_up,
     @DrawableRes collapseIcon: Int = R.drawable.ic_arrow_drop_down,
-    onStateChanged: () -> Unit = {},
 ) {
     Row(
         modifier = modifier,
@@ -158,18 +144,17 @@ fun HeaderView(
         Text(
             modifier = Modifier
                 .weight(0.9f)
-                .padding(8.dp),
+                .padding(dimensionResource(id = R.dimen.header_title_padding)),
             text = text,
             style = textStyle
         )
-        IconButton(onClick = onStateChanged) {
-            Icon(
-                painter = painterResource(
-                    id = if (isExpanded) expandedIcon else collapseIcon
-                ),
-                contentDescription = stringResource(id = R.string.txtListIndicatorDescription)
-            )
-        }
+        Icon(
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.icon_padding)),
+            painter = painterResource(
+                id = if (isExpanded) expandedIcon else collapseIcon
+            ),
+            contentDescription = stringResource(id = R.string.txtListIndicatorDescription)
+        )
     }
 }
 
@@ -195,17 +180,17 @@ fun ListItemView(
         Text(
             modifier = Modifier
                 .weight(0.9f)
-                .padding(all = 12.dp),
+                .padding(all = dimensionResource(id = R.dimen.list_item_title_padding)),
             text = text,
             style = textStyle,
         )
-        AnimatedVisibility(visible = isSelected) {
+        if (isSelected) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_check),
                 contentDescription = stringResource(R.string.txtSelectedListItemIcon),
                 modifier = Modifier
                     .weight(0.1f)
-                    .padding(end = 12.dp),
+                    .padding(end = dimensionResource(id = R.dimen.icon_padding)),
                 tint = Color.Green
             )
         }
@@ -217,11 +202,11 @@ fun ListItemView(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun ComposeExpandableListViewPreview() {
     ComposeExpandableListView(
-        data = listOf(
+        expandableListData = listOf(
             ExpandableListData(
                 stringResource(id = R.string.txtHeader),
                 listOf(ListItemData(stringResource(id = R.string.txtListItem), false)),
-            false
+                false
             )
         ),
         headerStylingAttributes = HeaderStylingAttributes(backgroundColor = Color.LightGray),

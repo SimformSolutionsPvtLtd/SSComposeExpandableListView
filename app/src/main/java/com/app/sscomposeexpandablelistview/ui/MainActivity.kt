@@ -1,11 +1,11 @@
-package com.app.sscomposeexpandablelistview
+package com.app.sscomposeexpandablelistview.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.ArrayRes
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,11 +17,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.app.sscomposeexpandablelistview.R
 import com.app.sscomposeexpandablelistview.ui.theme.SSComposeExpandableListViewTheme
 import com.simform.expandablelistview.ComposeExpandableListView
 import com.simform.expandablelistview.ExpandableListData
@@ -30,12 +32,12 @@ import com.simform.expandablelistview.ListItemData
 
 class MainActivity : ComponentActivity() {
 
-    private val expandableListData = mutableStateListOf<ExpandableListData>()
+    private lateinit var mainViewModel: MainViewModel
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        expandableListData.addAll(getExpandableListData())
+        mainViewModel = MainViewModel(getExpandableListData())
 
         enableEdgeToEdge()
         setContent {
@@ -53,34 +55,27 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) { innerPadding ->
+
+                    val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(
-                                PaddingValues(
-                                    top = innerPadding.calculateTopPadding(),
-                                    bottom = innerPadding.calculateBottomPadding(),
-                                    start = 12.dp,
-                                    end = 12.dp
-                                )
-                            )
+                            .padding(horizontal = 12.dp)
+                            .padding(innerPadding)
                     ) {
                         Spacer(modifier = Modifier.height(24.dp))
                         ComposeExpandableListView(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            data = expandableListData,
+                            expandableListData = uiState.expandableListData,
                             headerStylingAttributes = HeaderStylingAttributes(
                                 backgroundColor = Color.LightGray,
                                 cornerRadius = 8.dp,
                                 textStyle = MaterialTheme.typography.titleMedium
                             ),
-                            onStateChanged = { index, data ->
-                                updateExpandStatus(index, data)
-                            },
-                            onListItemClicked = { headerIndex, itemIndex, isSelected ->
-                                listItemSelected(headerIndex, itemIndex, isSelected)
-                            }
+                            onStateChanged = mainViewModel::updateExpandStatus,
+                            onListItemClicked = mainViewModel::listItemSelected
                         )
                     }
                 }
@@ -90,26 +85,24 @@ class MainActivity : ComponentActivity() {
 
     private fun getExpandableListData(): List<ExpandableListData> {
         val dataList = ArrayList<ExpandableListData>()
-        val listItems = ArrayList<ListItemData>().apply {
-            repeat(5) {
-                add(ListItemData("List item $it", false))
-            }
-        }
-        repeat(5) {
-            val data = ExpandableListData("header $it", listItems, false)
-            dataList.add(data)
-        }
+        dataList.add(ExpandableListData("Vegetables", getListItemData(R.array.vegetables), false))
+        dataList.add(ExpandableListData("Fruits", getListItemData(R.array.fruits), false))
+        dataList.add(
+            ExpandableListData(
+                "Milk Products",
+                getListItemData(R.array.milk_products),
+                false
+            )
+        )
         return dataList
     }
 
-    private fun updateExpandStatus(index: Int, isExpanded: Boolean) {
-        expandableListData[index] = expandableListData[index].copy(isExpanded = isExpanded)
-    }
-
-    private fun listItemSelected(headerIndex: Int, listItemIndex: Int, isSelected: Boolean) {
-        val listItems = ArrayList(expandableListData[headerIndex].listItems)
-        listItems[listItemIndex] = listItems[listItemIndex].copy(isSelected = isSelected)
-        expandableListData[headerIndex] = expandableListData[headerIndex].copy(listItems = listItems)
+    private fun getListItemData(@ArrayRes resId: Int): ArrayList<ListItemData> {
+        return ArrayList<ListItemData>().apply {
+            resources.getStringArray(resId).forEach {
+                add(ListItemData(it, false))
+            }
+        }
     }
 }
 
