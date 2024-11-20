@@ -2,6 +2,21 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    id(libs.versions.mavenpublish.get())
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            create<MavenPublication>(libs.versions.release.get()) {
+                from(components[libs.versions.release.get()])
+                groupId = libs.versions.group.id.get()
+                artifactId = libs.versions.artifact.id.get()
+                version = libs.versions.version.get()
+            }
+        }
+    }
 }
 
 android {

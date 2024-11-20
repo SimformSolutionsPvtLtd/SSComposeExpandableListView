@@ -10,6 +10,13 @@ activityCompose = "1.9.3"
 composeBom = "2024.11.00"
 appcompat = "1.7.0"
 
+# For publishing the library
+mavenpublish = "maven-publish"
+release = "release"
+group-id = "com.simform.expandablelistview"
+artifact-id = "expandablelistview"
+version = "1.0"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
