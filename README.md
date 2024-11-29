@@ -1,3 +1,5 @@
+![](ExpandableListViewBanner.png)
+
 # SSComposeExpandableListView
 
 [![Platform-badge]][Android]
