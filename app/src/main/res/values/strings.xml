@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">SSComposeExpandableListView</string>
+    <string name="txtAppTitle">SSComposeExpandableListView</string>
+    <string name="html_text"><![CDATA[<i>This is a HTML text</i> <a href="www.google.com">Formatted</a> <u>with html</u> tags.]]></string>
+
+    <string-array name="vegetables">
+        <item>Potato</item>
+        <item>Tomato</item>
+        <item>Ladies finger</item>
+    </string-array>
+
+    <string-array name="milk_products">
+        <item>Buttermilk</item>
+        <item>Curd</item>
+        <item>Cheese</item>
+    </string-array>
+
+    <string-array name="fruits">
+        <item>Apple</item>
+        <item>Banana</item>
+        <item>Mango</item>
+    </string-array>
+
+    <string-array name="headers">
+        <item>Vegetables</item>
+        <item>Milk Products</item>
+        <item>Fruits</item>
+    </string-array>
+
+
+    <string name="question_first">How do I get my apps ready for using Jetpack Compose?</string>
+    <string name="answer_first">If you apps are using uni-directional data flow, they will stand to benefit as the migration to Compose would be much smoother. I had spoken about a very relevant topic at Droidcon SF 2019. Towards the second half of the talk, I replace my entire UI with Compose with very little effort.</string>
+    <string name="question_second">How would you describe a composable?</string>
+    <string name="answer_second">\@Composable is the secret sauce for Jetpack Compose and it is the most fundamental building block. Annotating a function with @Composable allows that function to describe UI in Compose. This annotation is needed because Compose uses a custom kotlin compiler to function. This custom compiler does some post-processing to each @Composable function and changes its definition at compile time</string>
+    <string name="question_third">How can I started with Jetpack Compose?</string>
+    <string name="answer_third"><![CDATA[You can see the setup instructions <font color=#0173B7>  <b><u><a href="https://developer.android.com/develop/ui/compose/setup">here</a></u></b></font> to get your machine ready for doing <b>Compose development</b>.]]></string>
+</resources>

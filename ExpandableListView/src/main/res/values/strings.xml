@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="txtHeader">Header</string>
+    <string name="txtListItem">List Item</string>
+    <string name="txtListIndicatorDescription">List expand indicator</string>
+    <string name="txtSelectedListItemIcon">Selected icon item</string>
+</resources>
