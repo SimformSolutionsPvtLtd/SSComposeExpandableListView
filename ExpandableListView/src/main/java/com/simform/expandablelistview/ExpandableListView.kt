@@ -51,7 +51,7 @@ import com.simform.expandablelistview.ExpandableListViewDefaults.defaultListItem
  * Each header can be expanded to reveal items, and users can select them.
  *
  * @param modifier Modifier for the root container, allowing customization like padding or size.
- * @param expandableListData List of [ExpandableListData] representing the expandable list's headers and child items.
+ * @param data List of [ExpandableListData] representing the expandable list's headers and child items.
  * @param headerStylingAttributes Defines styling for headers, including appearance and layout.
  * @param listItemStylingAttributes Defines styling for list items, including appearance and layout.
  * @param contentAnimation Defines expand/collapse animation for expandable list content (default: [defaultContentAnimation]).
