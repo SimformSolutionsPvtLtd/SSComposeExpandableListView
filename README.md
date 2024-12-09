@@ -84,7 +84,7 @@ Expandable ListView in Jetpack Compose, providing an easy and flexible way to di
 | onListItemLongClicked     | (headerIndex: Int, itemIndex: Int, isSelected: Boolean) -> Unit | Callback for when a list item is long pressed, providing the header index, item index, and selection state. | Empty Lambda                     |
 
 
-## :heart: Find this samples useful?
+## :heart: Find the library useful?
 
 Support it by joining [stargazers] :star: for this repository.
 
